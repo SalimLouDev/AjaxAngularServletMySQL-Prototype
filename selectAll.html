@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <title>Document</title>
+</head>
+<body ng-app="myApp" >
+    <div ng-controller="customersCtrl"> 
+    <h1>list of emails :</h1>
+    <table class="table table-bordered">
+      <tr ng-repeat="x in myData">  
+        <td>{{x.expediteur}}</td>
+        <td>{{x.sujet}}</td>
+        <td>{{x.mail}}</td>
+        <td>{{x.destinatair}}</td>
+        <td>{{x.objet}}</td>
+      </tr>
+    </table>
+    
+    </div>
+    
+    <script type="text/javascript">
+        //width=25% border=1
+        //Emails_data output.json jsonObject
+    var app = angular.module('myApp', []);
+    app.controller('customersCtrl', function($scope, $http) {
+      $http.get("/ExoSup/ajax").then(function (response) {
+          $scope.myData = response.data.Emails_data;
+      },function (error) {
+        console.error(error);
+    }); 
+    })
+    </script>    
+</body>

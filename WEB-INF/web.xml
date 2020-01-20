@@ -1,0 +1,54 @@
+<!DOCTYPE web-app
+ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+ <servlet>
+  <servlet-name>r</servlet-name>
+  <servlet-class>refrechData</servlet-class>
+ </servlet>
+ <servlet>
+  <servlet-name>b</servlet-name>
+  <servlet-class>insertUpdateDelete</servlet-class>
+ </servlet>
+ <servlet>
+  <servlet-name>s</servlet-name>
+  <servlet-class>myservlet</servlet-class>
+ </servlet>
+ <servlet>
+  <servlet-name>i</servlet-name>
+  <servlet-class>insert</servlet-class>
+ </servlet>
+ <servlet>
+  <servlet-name>d</servlet-name>
+  <servlet-class>delete</servlet-class>
+ </servlet>
+ <servlet>
+  <servlet-name>u</servlet-name>
+  <servlet-class>update</servlet-class>
+ </servlet>   
+<servlet-mapping>
+  <servlet-name>b</servlet-name>
+  <url-pattern>/insertUpdateDelete</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>s</servlet-name>
+  <url-pattern>/MyServlet</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>r</servlet-name>
+  <url-pattern>/refrechData</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>i</servlet-name>
+  <url-pattern>/insert</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>d</servlet-name>
+  <url-pattern>/delete</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>u</servlet-name>
+  <url-pattern>/update</url-pattern>
+</servlet-mapping>
+</web-app>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Document</title>
+</head>
+<body ng-app="myApp" >
+    <div  class="form-group" ng-controller="customersCtrl">
+            <div class="form-group" >
+                <label>Email       <input  class="form-control" type="text" name="email" ng-model="email" value="" ng-bind=email ng-disabled="isDisabled" /></label>
+            </div>
+            <div class="form-group">    
+                <label>Expediteur  <input class="form-control" type="text" name="exp" ng-model="exp" value="" /></label>                
+            </div>
+            <div class="form-group">    
+                <label>Sujet       <input class="form-control" type="text" name="sujet" ng-model="sujet" value="" /></label>
+            </div>
+            <div class="form-group">       
+                <label>Destinatair <input class="form-control" type="text" name="dest" ng-model="dest" value="" /></label>
+            </div>
+            <div class="form-group">
+                <label>Objet       <input class="form-control" type="text" name="obj" ng-model="obj" value="" /></label>
+            </div>
+            <div class="form-group">    
+                <input class="btn btn-success" type="button" value="Add" ng-click="addData()" />   
+                <input class="btn btn-info" type="button" value="Update" ng-click="updateData()"/>
+            </div>
+            <h1>search for emails :</h1>
+            <label>Search<input ng-model="search"></label>
+            
+            <table class="table table-bordered">
+                    <tr ng-repeat="x in myData | filter : search ">    
+                        <td>{{x.expediteur}}</td>
+                        <td>{{x.sujet}}</td>
+                        <td>{{x.mail}}</td>
+                        <td>{{x.destinatair}}</td>
+                        <td>{{x.objet}}</td>
+                        <td>
+                            <input class="btn btn-danger" type="button" value="Delete" ng-click="deleteData(x)"/>
+                            <input class="btn btn-primary" type="button" value="Select" ng-click="selection(x)"/>
+                        </td>
+                    </tr>
+            </table>        
+    </div>
+    
+    
+    <script type="text/javascript"> 
+    
+    var app = angular.module('myApp', []);
+    app.controller('customersCtrl',function($scope,$http) {
+     
+    $http.defaults.headers.post["Content-Type"] = "application/json";
+
+/////////////////////// ADD DATA ///////////////////////////////////////////     
+
+  $scope.addData = function() {
+      $http({
+    url: '/ExoSup/insert',        
+    method: 'POST',
+    data: { 
+            'exp'     : $scope.exp ,
+            'email'   : $scope.email ,
+            'sujet'   : $scope.sujet ,
+            'dest'    : $scope.dest ,
+            'obj'     : $scope.obj , 
+            'Type'    : "Add",
+          }
+        }).then(function(response) 
+            {
+            /**** Success Case ****/
+            console.log("Success");
+            $scope.msgFromServlet = response.data;
+            $scope.email = "";
+            $scope.isDisabled = false;
+            $scope.exp   = "";
+            $scope.dest  = "";
+            $scope.obj   = "";
+            $scope.sujet = "";
+            alert("Added succesfully !");  
+            refreshData();
+            },function(error)
+                {
+                alert("error");
+                console.log(error);
+                }
+            );
+    }
+/////////////////////////////// SELECTION DATA //////////////////////////////////
+     
+   $scope.selection = function(curData) {
+         $scope.email = curData.mail;
+         $scope.isDisabled = true;
+         $scope.exp   = curData.expediteur;
+         $scope.dest  = curData.destinatair;
+         $scope.obj   = curData.objet;
+         $scope.sujet = curData.sujet;
+    }
+
+/////////////////////////////// UPDATE DATA //////////////////////////////////
+     
+$scope.updateData = function(curData) {
+      $http({
+    url: '/ExoSup/update',        
+    method: 'POST',
+    data: { 
+            'exp'     : $scope.exp ,
+            'email'   : $scope.email ,
+            'sujet'   : $scope.sujet ,
+            'dest'    : $scope.dest ,
+            'obj'     : $scope.obj , 
+            'Type'    : "Upd",
+          }
+        }).then(function(response) {
+            /**** Success Case ****/
+            console.log("Success");
+            $scope.email = "";
+            $scope.isDisabled = false;
+            $scope.exp   = "";
+            $scope.dest  = "";
+            $scope.obj   = "";
+            $scope.sujet = "";
+            alert("Row Updated");
+            refreshData();
+        },function(error) {
+        alert("error");
+       console.log(error);
+    });
+}
+
+/////////////////////////// DELETE TABLE ROW ///////////////////////////////////
+
+    
+    $scope.deleteData = function(curData){
+        $http({
+    url: '/ExoSup/delete',        
+    method: 'POST',
+    data: { 
+            'exp'   : curData.expediteur , 
+            'Type'  : "Del",
+          }
+    }).then(function(response) {
+            /**** Success Case ****/
+            console.log("Success");
+            $scope.email = "";
+            $scope.isDisabled = false;
+            $scope.exp   = "";
+            $scope.dest  = "";
+            $scope.obj   = "";
+            $scope.sujet = "";
+            alert("Row Deleted");
+            refreshData();
+        }, function(error) {
+        alert("error");
+       console.log(error);
+    });
+
+}
+
+
+
+//////////////////////////////// LOAD DATA ////////////////////////////////////
+
+       $http.get("/ExoSup/refrechData").then(function (response) {
+          $scope.myData = response.data.Emails_data;
+        },function (error) {
+        console.error(error);
+        }); 
+
+//////////////////////////////// REFRESH DATA ////////////////////////////////////
+
+function refreshData() {
+$http.get("/ExoSup/refrechData").then(function (response) {
+          $scope.myData = response.data.Emails_data;
+        },function (error) {
+        console.error(error);
+        }); }
+                
+})
+    </script>    
+</body>

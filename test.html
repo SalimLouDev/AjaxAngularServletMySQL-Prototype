@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>AngularJS Application</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script type="text/javascript">
+        var helloAjaxApp = angular.module("myApp", []);
+ 
+ helloAjaxApp.controller("UserController", [ '$scope', '$http', function($scope, $http) {
+  
+     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8";
+     $scope.sendData = function() {
+         $http({
+             url : '/ExoSup/MyServlet',
+             method : "POST",
+             data : {
+                 'username' : $scope.name
+             }
+         }).then(function(response) {
+             /**** Success Case ****/
+             console.log("Success -> " + response.data);
+             $scope.msgFromServlet = response.data;
+         }, function(response) {
+             /**** Failure Case ****/
+             console.log("Failure -> " + response.data);
+             $scope.msgFromServlet = response.data;
+         });
+     };
+ } ]);
+        </script>
+     
+        <!-- CSS Styling -->
+        <style type="text/css">
+            .cssStyling {
+                color: green;
+                font-size: larger;              
+            }
+        </style>
+    </head>
+    <body>
+        <h1>AngularJS Backend Application</h1>
+        <div ng-app="myApp">
+            <form ng-controller="UserController" ng-submit="sendData()">
+                <p>
+                    <label>Enter your name: </label>
+                    <input id="user_name" type="text" ng-model="name" placeholder="User Name" onblur="this.placeholder = 'User Name'" onfocus="this.placeholder = ''" />
+                </p>
+                <p>
+                    <button id="formBtn" type="submit">Submit</button>
+                </p>
+                <!-- Display's Output On The Screen -->
+                <p>
+                    <span id="welcomeText" class="cssStyling">{{msgFromServlet}}</span>
+                </p>
+            </form>           
+        </div>
+    </body>
+</html>
